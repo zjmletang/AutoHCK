@@ -374,9 +374,25 @@ module AutoHCK
                          @define_variables)
     end
 
+    def read_dynamic_device(device)
+      file_path = Pathname.new(DEVICES_JSON_DIR).join("#{device}.rb")
+
+      return nil unless File.exist?(file_path)
+
+      require file_path.realpath.to_s
+
+      raise InvalidConfigFile, "#{device} does not exist" unless QemuHCK::Devices.respond_to?(device)
+
+      QemuHCK::Devices.public_send(device, @logger)
+    end
+
     sig { params(device: String).returns(Models::QemuHCKDevice) }
     def read_device(device)
       @logger.info("Loading device: #{device}")
+
+      dynamic_device = read_dynamic_device(device)
+      return dynamic_device if dynamic_device
+
       Models::QemuHCKDevice.from_json_file("#{DEVICES_JSON_DIR}/#{device}.json", @logger)
     end
 

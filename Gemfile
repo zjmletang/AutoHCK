@@ -17,6 +17,7 @@ gem 'rtoolsHCK', git: 'https://github.com/HCK-CI/rtoolsHCK.git', tag: 'v0.5.1'
 gem 'rubyzip'
 gem 'sentry-ruby'
 gem 'sorbet-runtime'
+gem 'aliyun-sdk'
 
 group :development, :test do
   gem 'sorbet', require: false
